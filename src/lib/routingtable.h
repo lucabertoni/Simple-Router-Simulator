@@ -1,5 +1,10 @@
 #ifndef ROUTINGTABLE_H
 #define ROUTINGTABLE_H
+/*=================================
+=            PROTOTIPI            =
+=================================*/
+
+/*----------  Struct  ----------*/
 
 // Struct che definisce una singola riga della routing table
 struct routing_table_row
@@ -15,4 +20,6 @@ struct routing_table
 	struct routing_table_row* table_rows;
 };
 
+/*----------  Funzioni  ----------*/
+/*=====  End of PROTOTIPI  ======*/
 #endif

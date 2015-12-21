@@ -1,4 +1,4 @@
 Scrivere funzioni per leggere e scrivere la routing table su un file, così formato:
-	IP			|NEXT HOP	 |PESO|		(questa riga non va scritta nel file)
-	192.168.0.10|192.168.0.11|15|
-	192.168.0.11|192.168.0.17|2|
+	IP			|NEXT HOP	 |PESO		(questa riga non va scritta nel file)
+	192.168.0.10|192.168.0.11|15
+	192.168.0.11|192.168.0.17|2
