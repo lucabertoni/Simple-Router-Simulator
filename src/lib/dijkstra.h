@@ -8,8 +8,7 @@ struct net_node
 	struct net_node* next_nodes;	// Array di nodi successivi
 };
 
-int dijkstra_shortest_path(struct *net_node, int*, int);
-
 void get_less_weight(struct net_node* nodes, struct net_node* less_weight);
+int dijkstra_shortest_path(struct net_node*, int*, int);
 
 #endif
