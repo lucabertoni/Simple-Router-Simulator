@@ -20,8 +20,15 @@
  * less_weight        :            struct net_node, nodo che ha il peso minore
  *
  */
-void get_less_weight(struct net_node* nodes, struct net_node* less_weight){
-
+void get_less_weight(struct net_node* nodes, struct net_node* less_weight)
+{
+    int tmp = nodes->peso_nodo;
+    less_weight = nodes;
+    while(nodes != 0){
+        if (tmp > ++nodes->peso_nodo){
+            less_weight = nodes;
+        }
+    }
 }
 
 /**
