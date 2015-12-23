@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
 		 * router			:			t_router*, puntatore all'area di memoria della struct che identifica il router
 		 *
 		 */
-		free_router_memory(router);
+		release_router_memory(router);
 		return 1;
 	}
 
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
 	 * router			:			t_router*, puntatore all'area di memoria della struct che identifica il router
 	 *
 	 */
-	free_router_memory(router);
+	release_router_memory(router);
 
 	if(bError){
 		print(1, "Attenzione: Esecuzione del router terminata con un errore!\n");

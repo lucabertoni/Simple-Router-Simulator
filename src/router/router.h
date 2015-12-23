@@ -1,3 +1,5 @@
+#include "routingtable.h"
+
 #ifndef ROUTER_H
 #define ROUTER_H
 
@@ -11,7 +13,6 @@ typedef struct t_router			// Router header description
 {
 	unsigned long ip;			// Router ip
 }t_router;
-
 
 /*----------  Funzioni  ----------*/
 
@@ -46,7 +47,7 @@ t_router *initialize_router_memory();
  * router			:			t_router*, puntatore all'area di memoria della struct che identifica il router
  *
  */
-void free_router_memory(t_router *router);
+void release_router_memory(t_router *router);
 
 /**
  *
@@ -57,6 +58,12 @@ void free_router_memory(t_router *router);
  */
 int router_start(t_router *router);
 
+/**
+ *
+ * Cosa fa			:			Termina l'esecuzione del router
+ *
+ */
+void router_stop();
 /*=====  End of PROTOTIPI  ======*/
 
 #endif

@@ -15,12 +15,12 @@ LIB=../lib/
 EXE=router
 
 # File compilati che compongono l'eseguibile
-OBJECTS=$(BUILDDIR)/netlib.o $(BUILDDIR)/common.o $(BUILDDIR)/router.o $(BUILDDIR)/main.o 
+OBJECTS=$(BUILDDIR)/routingtable.o $(BUILDDIR)/netlib.o $(BUILDDIR)/common.o $(BUILDDIR)/router.o $(BUILDDIR)/main.o 
 
 # Punto di partenza della compilazione
 all: router
 
-router: printstartmessage netlib.o common.o router.o main.o
+router: printstartmessage routingtable.o netlib.o common.o router.o main.o
 	$(info Generazione eseguibile router...)
 	@$(CC) $(OBJECTS) -o $(EXE)
 	$(info Eseguibile creato nella cartella corrente con il nome di $(EXE))
@@ -48,6 +48,12 @@ common.o:
 	$(info Compilazione common.c ...)
 	@$(CC) -c $(LIB)common.c -o $(BUILDDIR)/common.o
 	$(info common.c compilato)
+
+# Libreria che gestisce la tabella di routing
+routingtable.o:
+	$(info Compilazione routingtable.c ...)
+	@$(CC) -c routingtable.c -o $(BUILDDIR)/routingtable.o
+	$(info routingtable.c compilato)
 
 # Pulisce dal disco i file *.o e l'eseguibile router
 clean:

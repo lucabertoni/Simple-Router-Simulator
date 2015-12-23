@@ -4,11 +4,13 @@
 
 /*----------  Librerie di sistema  ----------*/
 #include <stdlib.h>
+#include <signal.h>
 
 /*----------  Librerie definite dal programmatore  ----------*/
 #include "router.h"
 #include "../lib/netlib.h"
 #include "../lib/common.h"
+#include "routingtable.h"
 
 /*=====  End of INCLUSIONI  ======*/
 
@@ -79,10 +81,11 @@ t_router *initialize_router_memory(){
  * router			:			t_router*, puntatore all'area di memoria della struct che identifica il router
  *
  */
-void free_router_memory(t_router *router){
+void release_router_memory(t_router *router){
 	// Se non è già stata rilasciata la memoria, la rilascio
 	if(router != 0){
 		free(router);
+		router = NULL;
 	}
 }
 
@@ -95,10 +98,53 @@ void free_router_memory(t_router *router){
  */
 int router_start(t_router *router){
 	int bError;
+	routing_table *table;	// Tabella di routing
 
 	// Di default è in errore
 	bError = 1;
 
+	/**
+	 *
+	 * Cosa fa			:			Alloca la memoria necessaria per una struct di tipo routing_table
+	 * Ritorna			:			table -> struct routing_table, Struct contenente la definizione della tabella di routing
+	 *
+	 */
+	table = initialize_table_memory();
+
+	// Carico la tabella di routing in memoria
+	routingtable_load_table(table);
+
+	// Setto il signale SIGINT in modo che punti alla funzione che termina correttamente l'esecuzione del programma
+	signal(SIGINT,router_stop);
+
+	/**
+	
+		TODO:
+		- Definire e implementare router_listen
+	
+	 */
+	//router_listen(router,table);
+
+	/**
+	 *
+	 * Cosa fa			:			Libera la memoria occupata dalla struct della tabella di routing
+	 * table			:			routing_table, puntatore all'area di memoria della struct che identifica la tabella di routing
+	 *
+	 */
+	release_table_memory(table);
+	bError = 0;
 	return bError;
+}
+
+/**
+ *
+ * Cosa fa			:			Termina l'esecuzione del router
+ *
+ */
+void router_stop(){
+	print(0,"Esecuzione del router terminata correttamente.\n");
+	print(0,"/=====================================/\n");
+
+	exit(0);
 }
 /*=====  End of IMPLEMENTAZIONI FUNZIONI  ======*/
