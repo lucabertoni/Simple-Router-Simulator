@@ -25,13 +25,15 @@
  */
 unsigned long netlib_aton(char *char_ip);
 
+
 /**
-
-	TODO:
-	- Implementare netlib_ntoa
-
+ *
+ * Cosa fa			:			Converte un indirizzo ip da intero al suo corrispondente stringa (192.168.0.1)
+ * ip_address		:			unsigned long, indirizzo ip
+ * string_ip_address:			stringa, indirizzo ip convertito in stringa
+ *
  */
-char *netlib_ntoa(unsigned long ip_address);
+void netlib_ntoa(unsigned long ip_address, char *string_ip_address);
 
 /*=====  End of PROTOTIPI  ======*/
 

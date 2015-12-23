@@ -32,6 +32,31 @@ void router_setup(t_router *router, char *argv[]);
  */
 void router_set_ip(t_router *router, unsigned long ip);
 
+/**
+ *
+ * Cosa fa			:			Alloca la memoria necessaria per una struct di tipo t_router
+ * Ritorna			:			router -> struct t_router, Struct contenente la definizione del router
+ *
+ */
+t_router *initialize_router_memory();
+
+/**
+ *
+ * Cosa fa			:			Libera la memoria occupata dalla struct del router
+ * router			:			t_router*, puntatore all'area di memoria della struct che identifica il router
+ *
+ */
+void free_router_memory(t_router *router);
+
+/**
+ *
+ * Cosa fa			:			Avvia il router
+ * router			:			t_router, Struct contente le informazioni del router necessarie per il suo avvio
+ * Ritorna			:			bError -> intero, 0 = Ok | 1 = Errore
+ *
+ */
+int router_start(t_router *router);
+
 /*=====  End of PROTOTIPI  ======*/
 
 #endif

@@ -1,0 +1,1 @@
+clear ; make clean ; make ; ./router 192.168.0.1 ; echo "Codice valore di ritorno esecuzione: "$?
