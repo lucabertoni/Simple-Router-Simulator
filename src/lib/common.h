@@ -24,13 +24,5 @@ void print(int output,char* message);
  */
 char **explode(char *stringa_da_esplodere,int separatore);
 
-/**
- *
- * Cosa fa			:			Prende in input dallo stdin un carattere
- * Ritorna			:			nRet -> int, codice ascii carattere inserito
- *
- */
-int get_commandline_char();
-
 /*=====  End of PROTOTIPI  ======*/
 #endif

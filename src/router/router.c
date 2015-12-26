@@ -99,6 +99,7 @@ void release_router_memory(t_router *router){
 int router_start(t_router *router){
 	int bError;
 	routing_table *table;	// Tabella di routing
+	t_node *node;			// Nodo di rete di partenza con referenza ai nodi direttamente collegati
 
 	// Di default è in errore
 	bError = 1;
@@ -112,18 +113,46 @@ int router_start(t_router *router){
 	table = initialize_table_memory();
 
 	// Carico la tabella di routing in memoria
-	routingtable_load_table(table);
+	/**
+	 *
+	 * Cosa fa			:			Carica la tabella di routing dal file ROUTING_TABLE_FILE
+	 * table			:			routing_table, Tabella di routing nel quale caricare il file della tabella di routing
+	 * Ritorna			:			bRet -> intero, 1 = Tutto ok | 0 = Errore
+	 *
+	 */
+	bError = !(routingtable_load_table(table));
+	if(bError){
+		/**
+		 *
+		 * Cosa fa			:			Libera la memoria occupata dalla struct della tabella di routing
+		 * table			:			routing_table, puntatore all'area di memoria della struct che identifica la tabella di routing
+		 *
+		 */
+		release_table_memory(table);
+		return bError;
+	}
 
 	// Setto il signale SIGINT in modo che punti alla funzione che termina correttamente l'esecuzione del programma
 	signal(SIGINT,router_stop);
 
 	/**
-	
-		TODO:
-		- Definire e implementare router_listen
-	
+	 *
+	 * Cosa fa			:			Esegue un parse della tabella di routing trasformandola in un insieme di nodi e collegamenti con annessi pesi, senza però cicli
+	 * table			:			routing_table, puntatore alla definizione della tabella di routing
+	 * starting_node_ip	:			int, indirizzo ip del primo nodo (nodo radice)
+	 * Ritorna			:			node -> t_node, puntatore al nodo di rete (che contiene dei sottonodi)
+	 *
 	 */
-	//router_listen(router,table);
+	node = routingtable_parse_table(table, router->ip);
+
+	/**
+	 *
+	 * Cosa fa			:			Mette il router in modalità listen in attesa di una connessione da parte di un host
+	 * router			:			t_router, definizione del router da utilizzare
+	 * node				:			t_node, definizione della rete sotto forma di nodi e collegamenti con annessi pesi
+	 *
+	 */
+	router_listen(router,node);
 
 	/**
 	 *
@@ -146,5 +175,22 @@ void router_stop(){
 	print(0,"/=====================================/\n");
 
 	exit(0);
+}
+
+/**
+ *
+ * Cosa fa			:			Mette il router in modalità listen in attesa di una connessione da parte di un host
+ * router			:			t_router, definizione del router da utilizzare
+ * node				:			t_node, definizione della rete sotto forma di nodi e collegamenti con annessi pesi
+ *
+ */
+void router_listen(t_router *router,t_node *node){
+	/**
+	
+		TODO:
+		- Implementare funzione
+	
+	 */
+	
 }
 /*=====  End of IMPLEMENTAZIONI FUNZIONI  ======*/

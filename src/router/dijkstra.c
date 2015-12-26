@@ -16,11 +16,11 @@
 /**
  *
  * Cosa fa            :            Estrapola il nodo con peso inferiore dalla lista di nodi passati come parametri
- * nodes              :            struct net_node*, array di nodi
- * less_weight        :            struct net_node, nodo che ha il peso minore
+ * nodes              :            struct t_node*, array di nodi
+ * less_weight        :            struct t_node, nodo che ha il peso minore
  *
  */
-void get_less_weight(struct net_node* nodes, struct net_node* less_weight)
+void get_less_weight(struct t_node* nodes, struct t_node* less_weight)
 {
     int tmp = nodes->peso_nodo;
     less_weight = nodes;
@@ -34,17 +34,17 @@ void get_less_weight(struct net_node* nodes, struct net_node* less_weight)
 /**
  *
  * Cosa fa          :           Calcola il percorso minimo da nodo di Partenza a nodo di Fine
- * graph            :           net_node, Nodo di partenza
+ * graph            :           t_node, Nodo di partenza
  * sequenza_nodo    :           array di interi, contiene la sequenza dei nodi del percorso più corto [...]
  * destination      :           int, indirizzo di destinazione, nodo Fine
  * return           :           weight -> int; ritorna il peso totale del percorso fatto
  *
  *
  */
-int dijkstra_shortest_path(struct net_node* graph, int *sequenza_nodi, int destination)
+int dijkstra_shortest_path(struct t_node* graph, int *sequenza_nodi, int destination)
 {
     int weight = 0; 
-    struct net_node *node_less_weight;
+    struct t_node *node_less_weight;
     if (graph->ip == destination){
         return weight;
     }

@@ -14,6 +14,13 @@ typedef struct t_router			// Router header description
 	unsigned long ip;			// Router ip
 }t_router;
 
+typedef struct t_node
+{
+	int ip;							// Ip del nodo di rete corrente
+	int peso_nodo;					// Peso del nodo
+	struct t_node *next_nodes;				// Array di nodi successivi
+}t_node;
+
 /*----------  Funzioni  ----------*/
 
 /**
@@ -64,6 +71,16 @@ int router_start(t_router *router);
  *
  */
 void router_stop();
+
+/**
+ *
+ * Cosa fa			:			Mette il router in modalità listen in attesa di una connessione da parte di un host
+ * router			:			t_router, definizione del router da utilizzare
+ * node				:			t_node, definizione della rete sotto forma di nodi e collegamenti con annessi pesi
+ *
+ */
+void router_listen(t_router *router,t_node *node);
+
 /*=====  End of PROTOTIPI  ======*/
 
 #endif

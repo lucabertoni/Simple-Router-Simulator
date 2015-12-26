@@ -45,6 +45,7 @@ char **explode(char *stringa_da_esplodere,int separatore){
 	app 	= malloc(sizeof(char*));	// Stringa di appoggio per l'estrazione temporanea di una sottostringa dalla stringa da esplodere
 
 	if (strchr(stringa_da_esplodere,separatore) == NULL){
+		printf("NULL|%s|\n",stringa_da_esplodere);
 		return aRet;
 	}
 
@@ -54,20 +55,9 @@ char **explode(char *stringa_da_esplodere,int separatore){
 	{
 		aRet[ctr] = malloc(sizeof(char*));
 		strcpy(aRet[ctr++],app);
-		//printf ("%s\n",app);
 		app = strtok (NULL, "|");
 	}
-
 	return aRet;
 }
 
-/**
- *
- * Cosa fa			:			Prende in input dallo stdin un carattere
- * Ritorna			:			int, codice ascii carattere inserito
- *
- */
-int get_commandline_char(){
-	return fgetc(stdin);;
-}
 /*=====  End of IMPLEMENTAZIONI FUNZIONI  ======*/
