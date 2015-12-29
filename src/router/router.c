@@ -143,7 +143,7 @@ int router_start(t_router *router){
 	 * Ritorna			:			node -> t_node, puntatore al nodo di rete (che contiene dei sottonodi)
 	 *
 	 */
-	node = routingtable_parse_table(table, router->ip);
+	//node = routingtable_parse_table(table, router->ip);
 
 	/**
 	 *
@@ -152,7 +152,7 @@ int router_start(t_router *router){
 	 * node				:			t_node, definizione della rete sotto forma di nodi e collegamenti con annessi pesi
 	 *
 	 */
-	router_listen(router,node);
+	//router_listen(router,node);
 
 	/**
 	 *
@@ -160,7 +160,7 @@ int router_start(t_router *router){
 	 * table			:			routing_table, puntatore all'area di memoria della struct che identifica la tabella di routing
 	 *
 	 */
-	release_table_memory(table);
+	// release_table_memory(table);
 	bError = 0;
 	return bError;
 }

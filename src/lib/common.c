@@ -29,35 +29,36 @@ void print(int output,char* message){
 /**
  *
  * Cosa fa						:			Esplode una stringa su un carattere
+ * arr_ptr						:			array, puntatore all'array di stringhe
  * stringa_da_esplodere			:			stringa, stringa da esplodere sul carattere
  * separatore					:			carattere, carattere sul quale esplodere la stringa
- * Ritorna						:			aRet -> array di stringhe, stringhe estratte dall'explode sul carattere
  *
  */
-char **explode(char *stringa_da_esplodere,int separatore){
-	char **aRet;		// Array di stringhe estratto con l'explode
-	char carattere;		// Carattere estratto dalla stringa
-	char *app;			// Variabile di appoggio
-	int ctr;
+int explode(char ***arr_ptr, char *str, char delimiter){
+  char *src = str, *end, *dst;
+  char **arr;
+  int size = 1, i;
+  while ((end = strchr(src, delimiter)) != NULL)
+    {
+      ++size;
+      src = end + 1;
+    }
 
-	aRet	= malloc(sizeof(char**));
-	*aRet	= malloc(sizeof(char*));
-	app 	= malloc(sizeof(char*));	// Stringa di appoggio per l'estrazione temporanea di una sottostringa dalla stringa da esplodere
+  arr = malloc(size * sizeof(char *) + (strlen(str) + 1) * sizeof(char));
 
-	if (strchr(stringa_da_esplodere,separatore) == NULL){
-		printf("NULL|%s|\n",stringa_da_esplodere);
-		return aRet;
-	}
+  src = str;
+  dst = (char *) arr + size * sizeof(char *);
+  for (i = 0; i < size; ++i){
+      if ((end = strchr(src, delimiter)) == NULL)
+        end = src + strlen(src);
+      arr[i] = dst;
+      strncpy(dst, src, end - src);
+      dst[end - src] = '\0';
+      dst += end - src + 1;
+      src = end + 1;
+  }
+  *arr_ptr = arr;
 
-	ctr = 0;
-	app = strtok (stringa_da_esplodere,"|");
-	while (app != NULL)
-	{
-		aRet[ctr] = malloc(sizeof(char*));
-		strcpy(aRet[ctr++],app);
-		app = strtok (NULL, "|");
-	}
-	return aRet;
-}
-
+  return size;
+}  
 /*=====  End of IMPLEMENTAZIONI FUNZIONI  ======*/

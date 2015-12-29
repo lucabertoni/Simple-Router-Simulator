@@ -17,12 +17,12 @@ void print(int output,char* message);
 /**
  *
  * Cosa fa						:			Esplode una stringa su un carattere
+ * arr_ptr						:			array, puntatore all'array di stringhe
  * stringa_da_esplodere			:			stringa, stringa da esplodere sul carattere
  * separatore					:			carattere, carattere sul quale esplodere la stringa
- * Ritorna						:			aRet -> array di stringhe, stringhe estratte dall'explode sul carattere
  *
  */
-char **explode(char *stringa_da_esplodere,int separatore);
+int explode(char ***arr_ptr, char *str, char delimiter);
 
 /*=====  End of PROTOTIPI  ======*/
 #endif

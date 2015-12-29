@@ -29,9 +29,10 @@
 int routingtable_load_table(routing_table *table){
 	FILE *fd;
 	int bRet = 0;
-	char *riga_file;
+	char riga_file[MAX_BUFFER_SIZE];
 	char **aRow;
 	int ctr;
+	routing_table_row *app;
 
 	// Apro il collegamento verso il file dell routing table
 	fd = fopen(ROUTING_TABLE_FILE,"r");
@@ -39,19 +40,20 @@ int routingtable_load_table(routing_table *table){
 		return bRet;
 	}
 
+	(*table->table_rows) = malloc(sizeof(routing_table_row));
+	app = *table->table_rows;
 	ctr = 0;
-	printf("\nIND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->ip);
-	
+
 	// Leggo le righe della tabella
 	while(!feof(fd)){
 		fgets(riga_file,MAX_BUFFER_SIZE,fd);
-		printf("DENTRO|%d|%s|%d|\n", ctr,riga_file,strlen(riga_file));
+
 		// Esplodo la stringa sulla |
 		// aRow sarà così formata:
 		// aRow[0] => 192.168.0.10 (Ip destinazione)
 		// aRow[1] => 192.168.0.11 (Next Hop)
 		// aRow[2] => 1 (Peso)
-		aRow = explode(riga_file,'|');
+		explode(&aRow,riga_file,'|');
 
 		// Aggiungo gli elementi estratti alla struct
 		/**
@@ -61,38 +63,33 @@ int routingtable_load_table(routing_table *table){
 		 * Ritorna			:			unsigned long, ip convertito. 0 = errore
 		 *
 		 */
-		*table->table_rows = malloc(sizeof(routing_table_row));
 		(*table->table_rows)->ip 		= netlib_aton(aRow[0]);
 		(*table->table_rows)->next_hop 	= netlib_aton(aRow[1]);
 		(*table->table_rows)->peso		= atoi(aRow[2]);
+
 		printf("IND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->ip);
-		table->table_rows++;
+		(*table->table_rows)++;
+		//(*table->table_rows) = malloc(sizeof(routing_table_row));
 		ctr++;
-		//printf("AFTER|%d|\n", *table->table_rows);
 	}
-
 	// Riporto il puntatore a puntare al primo elemento della tabella d routing
+
 	if(ctr > 0 ){
-		*table->table_rows--;
+/*		
+		(*table->table_rows)--;
 		ctr--;
+*/		
 	}
 
-	printf("\nIND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->ip);
-	int i;
-	printf("CTR|%d|\n\n", ctr);
-	table->table_rows -= ctr;
-/*	
-	for(i = 0; i < ctr;i++,*table->table_rows--){
-		printf("DENTRO\n");
-		printf("IND|%u|IP|%d|%d|\n",*table->table_rows,(*table->table_rows)->ip,i);
-	}
-*/
-	printf("\nINDDDD|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->ip);
+	*table->table_rows = app;
+	printf("============================================\n");
+	printf("IND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->ip);
+	printf("IND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->next_hop);
+	printf("IND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->peso);
 	free(aRow);
 
-	// Chiudo il file
 	fclose(fd);
-	
+	printf("RETURN\n");
 	return 1;
 }
 
@@ -110,9 +107,6 @@ routing_table *initialize_table_memory(){
 
 	// Alloco la memoria per l'array di struct delle righe della tabella
 	table->table_rows = malloc(sizeof(routing_table_row*));
-
-	// Alloco la memoria per la prima riga dell'array di struct
-	*table->table_rows = malloc(sizeof(routing_table_row));
 
 	return table;
 }
