@@ -2,6 +2,7 @@
 =            INCLUSIONI            =
 ==================================*/
 #include <stdlib.h>
+#include <stdio.h>
 
 /*----------  Librerie definite dal programmatore  ----------*/
 #include "dijkstra.h"
@@ -20,14 +21,16 @@
  * less_weight        :            struct t_node, nodo che ha il peso minore
  *
  */
-void get_less_weight(struct t_node* nodes, struct t_node* less_weight)
+void get_less_weight(t_node* nodes, t_node less_weight)
 {
     int tmp = nodes->peso_nodo;
-    less_weight = nodes;
-    while(nodes != 0){
-        if (tmp > ++nodes->peso_nodo){
-            less_weight = nodes;
+    less_weight = *nodes;
+    while(nodes != NULL){
+        if (tmp > nodes->peso_nodo){
+            less_weight = *nodes;
         }
+        printf("NODO|%u|\n",nodes);
+        nodes++;
     }
 }
 
@@ -41,18 +44,20 @@ void get_less_weight(struct t_node* nodes, struct t_node* less_weight)
  *
  *
  */
-int dijkstra_shortest_path(struct t_node* graph, int *sequenza_nodi, int destination)
+int dijkstra_shortest_path(t_node* graph, int *sequenza_nodi, int destination)
 {
     int weight = 0; 
-    struct t_node *node_less_weight;
+    t_node node_less_weight;
     if (graph->ip == destination){
         return weight;
     }
     else{
         while (graph->next_nodes != 0){
+            printf("lol\n");
             get_less_weight(graph->next_nodes, node_less_weight);
-            sequenza_nodi = (int*)realloc(sequenza_nodi, sizeof(sequenza_nodi) + sizeof(int));
-            *sequenza_nodi = graph->ip;
+            printf("lol2\n");
+            sequenza_nodi = realloc(sequenza_nodi, sizeof(sequenza_nodi) + sizeof(int));
+            *sequenza_nodi = graph->ip; // Mi sa che è sbagliato, credo ci vada "node_less_weight->ip", verifica, Luca
             sequenza_nodi++;
             weight += node_less_weight->peso_nodo;
 

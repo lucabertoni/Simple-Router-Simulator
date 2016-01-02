@@ -24,14 +24,14 @@
 typedef struct routing_table_row
 {
 	unsigned long ip;			// Ip destinazione
-	unsigned long next_hop;	// Passo successivo
-	int peso;		// Peso per raggiungere il nodo successivo
+	unsigned long next_hop;		// Passo successivo
+	int peso;					// Peso per raggiungere il nodo successivo
 }routing_table_row;
 
 // Struct che definisce l'intera tabella di routing basandosi sulle singole righe della routing table
 typedef struct routing_table
 {
-	routing_table_row **table_rows;
+	routing_table_row *table_rows;
 }routing_table;
 
 /*----------  Funzioni  ----------*/

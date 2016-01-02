@@ -19,8 +19,8 @@
 /*----------  Definizione tipi/struct  ----------*/
 
 /*----------  Funzioni  ----------*/
-void get_less_weight(struct t_node* nodes, struct t_node* less_weight);
-int dijkstra_shortest_path(struct t_node*, int*, int);
+void get_less_weight(t_node* nodes, t_node less_weight);
+int dijkstra_shortest_path(t_node*, int*, int);
 
 /*=====  End of PROTOTIPI  ======*/
 #endif

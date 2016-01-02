@@ -40,8 +40,7 @@ int routingtable_load_table(routing_table *table){
 		return bRet;
 	}
 
-	(*table->table_rows) = malloc(sizeof(routing_table_row));
-	app = *table->table_rows;
+	app = table->table_rows;
 	ctr = 0;
 
 	// Leggo le righe della tabella
@@ -63,33 +62,32 @@ int routingtable_load_table(routing_table *table){
 		 * Ritorna			:			unsigned long, ip convertito. 0 = errore
 		 *
 		 */
-		(*table->table_rows)->ip 		= netlib_aton(aRow[0]);
-		(*table->table_rows)->next_hop 	= netlib_aton(aRow[1]);
-		(*table->table_rows)->peso		= atoi(aRow[2]);
+		table->table_rows->ip	 		= netlib_aton(aRow[0]);
+		table->table_rows->next_hop 	= netlib_aton(aRow[1]);
+		table->table_rows->peso			= atoi(aRow[2]);
 
-		printf("IND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->ip);
-		(*table->table_rows)++;
-		//(*table->table_rows) = malloc(sizeof(routing_table_row));
+		printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->ip);
+
 		ctr++;
-	}
-	// Riporto il puntatore a puntare al primo elemento della tabella d routing
+		table->table_rows = realloc(table->table_rows,sizeof(routing_table_row) * (ctr + 1));
 
-	if(ctr > 0 ){
-/*		
-		(*table->table_rows)--;
-		ctr--;
-*/		
 	}
 
-	*table->table_rows = app;
+	//table->table_rows = app;
 	printf("============================================\n");
-	printf("IND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->ip);
-	printf("IND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->next_hop);
-	printf("IND|%u|IP|%d|\n",*table->table_rows,(*table->table_rows)->peso);
+	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->ip);
+	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->next_hop);
+	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->peso);
+	
+	table->table_rows++;
+	printf("============================================\n");
+	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->ip);
+	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->next_hop);
+	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->peso);
+
 	free(aRow);
 
 	fclose(fd);
-	printf("RETURN\n");
 	return 1;
 }
 
@@ -120,7 +118,7 @@ routing_table *initialize_table_memory(){
 void release_table_memory(routing_table *table){
 	// Se la tabella non è già stata rilasciata, la rilascio
 	if (table->table_rows != 0){
-		release_table_row_memory(*table->table_rows);
+		release_table_row_memory(table->table_rows);
 
 		free(table->table_rows);
 		table->table_rows = NULL;
