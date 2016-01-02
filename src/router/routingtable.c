@@ -41,6 +41,7 @@ int routingtable_load_table(routing_table *table){
 	}
 
 	app = table->table_rows;
+	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->ip);
 	ctr = 0;
 
 	// Leggo le righe della tabella
@@ -62,6 +63,7 @@ int routingtable_load_table(routing_table *table){
 		 * Ritorna			:			unsigned long, ip convertito. 0 = errore
 		 *
 		 */
+		table->table_rows = realloc(table->table_rows,sizeof(routing_table_row) * (ctr + 1));
 		table->table_rows->ip	 		= netlib_aton(aRow[0]);
 		table->table_rows->next_hop 	= netlib_aton(aRow[1]);
 		table->table_rows->peso			= atoi(aRow[2]);
@@ -69,21 +71,20 @@ int routingtable_load_table(routing_table *table){
 		printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->ip);
 
 		ctr++;
-		table->table_rows = realloc(table->table_rows,sizeof(routing_table_row) * (ctr + 1));
 
 	}
 
-	//table->table_rows = app;
+	table->table_rows = app;		// Torno all'inizio dell'array	-> Il valore del puntatore è equivalente a quello iniziale, ma il valore di IP è 0, nonostante gli sia stato assegnato un valore nel loop qui sopra
 	printf("============================================\n");
 	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->ip);
-	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->next_hop);
-	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->peso);
+	printf("IND|%u|NEXT HOP|%u|\n",table->table_rows,table->table_rows->next_hop);
+	printf("IND|%u|PESO|%u|\n",table->table_rows,table->table_rows->peso);
 	
 	table->table_rows++;
 	printf("============================================\n");
 	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->ip);
-	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->next_hop);
-	printf("IND|%u|IP|%u|\n",table->table_rows,table->table_rows->peso);
+	printf("IND|%u|NEXT HOP|%u|\n",table->table_rows,table->table_rows->next_hop);
+	printf("IND|%u|PESO|%u|\n",table->table_rows,table->table_rows->peso);
 
 	free(aRow);
 
