@@ -9,13 +9,13 @@ When the router has loaded the table, it goes in listen-mode where it waits for 
 When a connection is established, the router breaks up the ICMP packet and gets the destination IP. Using Dijkstra's algorithm it gets the shortest path to reach the destination and then it sends the packet in the net towards the destination.  
 
 ## Test environment
-**Processor**: AMD Phenom(tm) II P960 Quad-Core Processor 1.8GHz
+**Processor**: AMD Phenom(tm) II P960 Quad-Core Processor 1.8GHz  
 **GCC version**: gcc version 4.9.2 (Debian 4.9.2-10)
 
 ## Results  
 Results of the computation time of the Dijkstra's algorithm. (time in seconds)
 
-### Version 1.0 (easiest algorithm to generate prime numbers)  
+### Version 1.0 (easiest algorithm)  
 #### Sending a packet from one host to another through 10 intermediates routers.
 ...
 
