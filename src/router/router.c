@@ -97,30 +97,24 @@ void release_router_memory(t_router *router){
  *
  */
 int router_start(t_router *router){
-	int bError;
-	routing_table *table;	// Tabella di routing
+	int bError,table_size;
+	routing_table *table;		// Tabella di routing
 	t_node *node;			// Nodo di rete di partenza con referenza ai nodi direttamente collegati
 
 	// Di default è in errore
 	bError = 1;
-
+	
+	// Setto il signale SIGINT in modo che punti alla funzione che termina correttamente l'esecuzione del programma
+	signal(SIGINT,router_stop);
+	
 	/**
 	 *
 	 * Cosa fa			:			Alloca la memoria necessaria per una struct di tipo routing_table
-	 * Ritorna			:			table -> struct routing_table, Struct contenente la definizione della tabella di routing
+	 * table			:			routing_table *, puntatore alla struct di tipo routing_table
+	 * Ritorna			:			bRet -> intero, 0 = Ok | 1 = Errore
 	 *
 	 */
-	table = initialize_table_memory();
-
-	// Carico la tabella di routing in memoria
-	/**
-	 *
-	 * Cosa fa			:			Carica la tabella di routing dal file ROUTING_TABLE_FILE
-	 * table			:			routing_table, Tabella di routing nel quale caricare il file della tabella di routing
-	 * Ritorna			:			bRet -> intero, 1 = Tutto ok | 0 = Errore
-	 *
-	 */
-	bError = !(routingtable_load_table(table));
+        bError = initialize_table_memory(&table);
 	if(bError){
 		/**
 		 *
@@ -129,21 +123,90 @@ int router_start(t_router *router){
 		 *
 		 */
 		release_table_memory(table);
+		print(1,"Errore durante l'inizializzazione della memoria necessaria per contenere la tabella di routing.\n");
 		return bError;
 	}
 
-	// Setto il signale SIGINT in modo che punti alla funzione che termina correttamente l'esecuzione del programma
-	signal(SIGINT,router_stop);
+	// Carico la tabella di routing in memoria
+	/**
+	 *
+	 * Cosa fa			:			Carica la tabella di routing dal file ROUTING_TABLE_FILE
+	 * table			:			routing_table, Tabella di routing nel quale caricare il file della tabella di routing
+	 * Ritorna			:			bRet -> intero, >=1 = Tutto ok | 0 = Errore, numero di elementi che contiene la tabella
+	 *
+	 */
+        table_size = routingtable_load_table(table);
+	if(table_size <= 0){
+		/**
+		 *
+		 * Cosa fa			:			Libera la memoria occupata dalla struct della tabella di routing
+		 * table			:			routing_table, puntatore all'area di memoria della struct che identifica la tabella di routing
+		 *
+		 */
+		release_table_memory(table);
+		print(1,"Errore durante il caricamento della tabella di routing dal file.\n");
+		return bError;
+	}
 
+	/**
+	 *
+	 * Cosa fa			:			Alloca la memoria necessaria per una struct di tipo t_node
+	 * table			:			t_node *, puntatore alla struct di tipo t_node
+	 * Ritorna			:			bRet -> intero, 0 = Ok | 1 = Errore
+	 *
+	 */
+        bError = initialize_node_memory(&node);
+	if(bError){
+		/**
+		 *
+		 * Cosa fa			:			Libera la memoria occupata dalla struct della tabella di routing
+		 * table			:			routing_table, puntatore all'area di memoria della struct che identifica la tabella di routing
+		 *
+		 */
+		release_table_memory(table);
+		
+		/**
+		 *
+		 * Cosa fa			:			Libera la memoria occupata dalla struct del grafo di rete
+		 * node				:			t_node, puntatore all'area di memoria della struct che identifica il grafo (primo nodo)
+		 *
+		 */
+		release_node_memory(node);
+		
+		print(1,"Errore durante l'inizializzazione della memoria necessaria per contenere il grafo di rete.\n");
+		return bError;
+	}
+	
 	/**
 	 *
 	 * Cosa fa			:			Esegue un parse della tabella di routing trasformandola in un insieme di nodi e collegamenti con annessi pesi, senza però cicli
 	 * table			:			routing_table, puntatore alla definizione della tabella di routing
-	 * starting_node_ip	:			int, indirizzo ip del primo nodo (nodo radice)
-	 * Ritorna			:			node -> t_node, puntatore al nodo di rete (che contiene dei sottonodi)
+	 * starting_node_ip		:			int, indirizzo ip del primo nodo (nodo radice)
+	 * node				:			t_node, puntatore al nodo di rete (che contiene dei sottonodi)
+	 * Ritorna			:			bRet -> intero, 0 = Tutto ok | 1 = Errore
 	 *
 	 */
-	//node = routingtable_parse_table(table, router->ip);
+	bError = routingtable_parse_table(table,table_size,router->ip,&node);
+	if(bError){
+		/**
+		 *
+		 * Cosa fa			:			Libera la memoria occupata dalla struct della tabella di routing
+		 * table			:			routing_table, puntatore all'area di memoria della struct che identifica la tabella di routing
+		 *
+		 */
+		release_table_memory(table);
+
+		/**
+		 *
+		 * Cosa fa			:			Libera la memoria occupata dalla struct del grafo di rete
+		 * node				:			t_node, puntatore all'area di memoria della struct che identifica il grafo (primo nodo)
+		 *
+		 */
+		release_node_memory(node);
+		
+		print(1,"Errore durante il parsing della tabella di routing.\n");
+		return bError;
+	}
 
 	/**
 	 *
@@ -160,9 +223,17 @@ int router_start(t_router *router){
 	 * table			:			routing_table, puntatore all'area di memoria della struct che identifica la tabella di routing
 	 *
 	 */
-	// release_table_memory(table);
-	bError = 0;
-	return bError;
+	release_table_memory(table);
+
+	/**
+	 *
+	 * Cosa fa			:			Libera la memoria occupata dalla struct del grafo di rete
+	 * node				:			t_node, puntatore all'area di memoria della struct che identifica il grafo (primo nodo)
+	 *
+	 */
+	release_node_memory(node);
+		
+	return (!bError);	// Se sono arrivato qui senza problemi ritorno 0, ovvero Tutto ok!
 }
 
 /**
@@ -193,4 +264,52 @@ void router_listen(t_router *router,t_node *node){
 	 */
 	
 }
+
+/**
+ *
+ * Cosa fa			:			Alloca la memoria necessaria per una struct di tipo t_node
+ * table			:			t_node *, puntatore alla struct di tipo t_node
+ * Ritorna			:			bRet -> intero, 0 = Ok | 1 = Errore
+ *
+ */
+int initialize_node_memory(t_node **node){
+	int bRet;
+	bRet = 1;	// Di default stabilisco che ci sia un errore
+	
+	// Alloco la memoria per la struct
+	*node = malloc(sizeof(t_node));
+	// Se c'è stato un errore durante l'allocazione, termino la funzione
+	if(*node == NULL){
+		return bRet;
+	}
+
+	// Alloco la memoria per l'array di struct delle righe della tabella
+	(*node)->next_nodes = malloc(sizeof(t_node));
+	if((*node)->next_nodes == NULL){
+		return bRet;
+	}
+
+	return (!bRet);	// Ritorno 0 nel caso sia arrivato correttamente fino qui  
+}
+
+/**
+ *
+ * Cosa fa			:			Libera la memoria occupata dalla struct del grafo di rete
+ * node				:			t_node, puntatore all'area di memoria della struct che identifica il grafo (primo nodo)
+ *
+ */
+void release_node_memory(t_node *node){
+	if (node->next_nodes != 0){
+		free(node->next_nodes);
+		node->next_nodes = NULL;
+	}
+
+	if(node != 0){
+		free(node);
+		node = NULL;
+	}
+
+	return;
+}
+
 /*=====  End of IMPLEMENTAZIONI FUNZIONI  ======*/

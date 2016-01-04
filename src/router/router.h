@@ -17,7 +17,7 @@ typedef struct t_router			// Router header description
 typedef struct t_node
 {
 	int ip;							// Ip del nodo di rete corrente
-	int peso_nodo;					// Peso del nodo
+	int peso_nodo;						// Peso del nodo
 	struct t_node *next_nodes;				// Array di nodi successivi
 }t_node;
 
@@ -81,6 +81,22 @@ void router_stop();
  */
 void router_listen(t_router *router,t_node *node);
 
+/**
+ *
+ * Cosa fa			:			Alloca la memoria necessaria per una struct di tipo t_node
+ * table			:			t_node *, puntatore alla struct di tipo t_node
+ * Ritorna			:			bRet -> intero, 0 = Ok | 1 = Errore
+ *
+ */
+int initialize_node_memory(t_node **node);
+
+/**
+ *
+ * Cosa fa			:			Libera la memoria occupata dalla struct del grafo di rete
+ * node				:			t_node, puntatore all'area di memoria della struct che identifica il grafo (primo nodo)
+ *
+ */
+void release_node_memory(t_node *node);
 /*=====  End of PROTOTIPI  ======*/
 
 #endif
