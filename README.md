@@ -31,7 +31,7 @@ This means that there are two hosts: source(H0, ip: 192.168.0.10) and destinatio
 
 
 ```
-                         B 	 3       C
+                         B       3       C
                          O---------------O
                         /|\               \
                        / | \               \
@@ -49,7 +49,7 @@ O----------------O       |1      \               O----------------O
                        \ |    /        \   /
                         \| /            \ /
                          O---------------O
-                       	 F	 2       E
+                       	 F       2       E
 ```
 The numbers in the graph are the weights of links between routers.
 
