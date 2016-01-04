@@ -31,7 +31,8 @@ typedef struct routing_table_row
 // Struct che definisce l'intera tabella di routing basandosi sulle singole righe della routing table
 typedef struct routing_table
 {
-	routing_table_row *table_rows;
+	routing_table_row *table_rows;	// Array di nodi collegati
+	int table_size;			// Dimensione della tabella di routing
 }routing_table;
 
 /*----------  Funzioni  ----------*/
@@ -40,11 +41,11 @@ typedef struct routing_table
  *
  * Cosa fa			:			Carica la tabella di routing dal file ROUTING_TABLE_FILE
  * table			:			routing_table, Tabella di routing nel quale caricare il file della tabella di routing
- * Ritorna			:			bRet -> intero, >=1 = Tutto ok | 0 = Errore, numero di elementi che contiene la tabella
+ * Ritorna			:			bRet -> intero, 1 = Tutto ok | 0 = Errore
  *
  */
 int routingtable_load_table(routing_table *table);
-
+  
 /**
  *
  * Cosa fa			:			Alloca la memoria necessaria per una struct di tipo routing_table
@@ -66,12 +67,11 @@ void release_table_memory(routing_table *table);
  *
  * Cosa fa			:			Esegue un parse della tabella di routing trasformandola in un insieme di nodi e collegamenti con annessi pesi, senza però cicli
  * table			:			routing_table, puntatore alla definizione della tabella di routing
- * table_size			:			int, numero di elementi nella tabella di routing
  * starting_node_ip		:			int, indirizzo ip del primo nodo (nodo radice)
  * node				:			t_node, puntatore al nodo di rete (che contiene dei sottonodi)
  * Ritorna			:			bRet -> intero, 0 = Tutto ok | 1 = Errore
  *
  */
-int routingtable_parse_table(routing_table *table,int table_size,int router_ip,t_node **node);
+int routingtable_parse_table(routing_table *table,int router_ip,t_node **node);
 /*=====  End of PROTOTIPI  ======*/
 #endif

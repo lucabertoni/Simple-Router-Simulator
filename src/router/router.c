@@ -97,7 +97,7 @@ void release_router_memory(t_router *router){
  *
  */
 int router_start(t_router *router){
-	int bError,table_size;
+	int bError;
 	routing_table *table;		// Tabella di routing
 	t_node *node;			// Nodo di rete di partenza con referenza ai nodi direttamente collegati
 
@@ -132,11 +132,11 @@ int router_start(t_router *router){
 	 *
 	 * Cosa fa			:			Carica la tabella di routing dal file ROUTING_TABLE_FILE
 	 * table			:			routing_table, Tabella di routing nel quale caricare il file della tabella di routing
-	 * Ritorna			:			bRet -> intero, >=1 = Tutto ok | 0 = Errore, numero di elementi che contiene la tabella
+	 * Ritorna			:			bRet -> intero, 1 = Tutto ok | 0 = Errore
 	 *
 	 */
-        table_size = routingtable_load_table(table);
-	if(table_size <= 0){
+        bError = !(routingtable_load_table(table));
+	if(bError){
 		/**
 		 *
 		 * Cosa fa			:			Libera la memoria occupata dalla struct della tabella di routing
@@ -186,7 +186,7 @@ int router_start(t_router *router){
 	 * Ritorna			:			bRet -> intero, 0 = Tutto ok | 1 = Errore
 	 *
 	 */
-	bError = routingtable_parse_table(table,table_size,router->ip,&node);
+	bError = routingtable_parse_table(table,router->ip,&node);
 	if(bError){
 		/**
 		 *
