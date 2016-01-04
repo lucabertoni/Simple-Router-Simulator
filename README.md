@@ -27,7 +27,7 @@ Destination  | Next Hop  |Weight
 192.168.0.2  |X          |   1
 192.168.0.6  |X          |   3
 
-*X = Direct connection, there aren't any router between the destination and the current position.*
+X = Direct connection, there aren't any router between the destination and the current position.
 
 ```
 
@@ -56,6 +56,14 @@ O----------------O       |1      \               O----------------O
                        	 F       2       E
 ```
 The numbers in the graph are the weights of links between routers.
+
+Ip of the routers are:  
+A = 192.168.0.1  
+B = 192.168.0.2
+C = 192.168.0.3
+D = 192.168.0.4
+E = 192.168.0.5
+F = 192.168.0.6
 
 ## Results  
 Results of the computation time of the Dijkstra's algorithm. (time in seconds)
