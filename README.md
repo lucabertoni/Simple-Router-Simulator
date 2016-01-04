@@ -48,7 +48,7 @@ O----------------O       |1      \               O----------------O
                     3 \  |       /    \     / 1
                        \ |    /        \   /
                         \| /            \ /
-                	 O---------------O
+                         O---------------O
                        	 F	 2       E
 ```
 The numbers in the graph are the weights of links between routers.
