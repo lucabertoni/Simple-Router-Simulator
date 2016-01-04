@@ -15,15 +15,19 @@ When a connection is established, the router breaks up the ICMP packet and gets 
 ## Example of network
 The network used actually in test is the following.
 ```
-192.168.0.11|192.168.0.4|0
-192.168.0.4|192.168.0.3|2
-192.168.0.4|192.168.0.5|1
-192.168.0.4|192.168.0.6|6
-192.168.0.3|192.168.0.2|3
-192.168.0.5|192.168.0.2|5
-192.168.0.5|192.168.0.6|2
-192.168.0.2|0|1
-192.168.0.6|0|3
+Destination  | Next Hop  |Weight
+--------------------------------
+192.168.0.11 |192.168.0.4|   0
+192.168.0.4  |192.168.0.3|   2
+192.168.0.4  |192.168.0.5|   1
+192.168.0.4  |192.168.0.6|   6
+192.168.0.3  |192.168.0.2|   3
+192.168.0.5  |192.168.0.2|   5
+192.168.0.5  |192.168.0.6|   2
+192.168.0.2  |X          |   1
+192.168.0.6  |X          |   3
+
+*X = Direct connection, there aren't any router between the destination and the current position.*
 
 ```
 
