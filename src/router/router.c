@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <signal.h>
 
+#include <stdio.h> // TODO: Togliere!!!
 /*----------  Librerie definite dal programmatore  ----------*/
 #include "router.h"
 #include "../lib/netlib.h"
@@ -89,6 +90,24 @@ void release_router_memory(t_router *router){
 	}
 }
 
+// TODO: Cancellare questa funzione!
+void router_print_node(t_node node,int nTab){
+	int i,i2;
+	char sApp[255];
+	char sApp1[255];
+
+        netlib_ntoa(node.ip,sApp);
+        for(i = 0;i<(nTab-1);i++)	printf("\t");
+	printf("PADRE|%s|\n",sApp);
+	for(i = 0;node.next_nodes[i].ip != 0;i++){
+		netlib_ntoa(node.next_nodes[i].ip,sApp1);
+		for(i2 = 0;i2<nTab;i2++)	printf("\t");
+		printf("FIGLIO|%s|%d|\n",sApp1,node.next_nodes[i].peso_nodo);
+		router_print_node(node.next_nodes[i],nTab + 1);
+	}
+}
+
+
 /**
  *
  * Cosa fa			:			Avvia il router
@@ -98,7 +117,7 @@ void release_router_memory(t_router *router){
  */
 int router_start(t_router *router){
 	int bError;
-	routing_table *table;		// Tabella di routing
+	routing_table *table,*app_table;// Tabella di routing e tabella di routing di appoggio per il parse
 	t_node *node;			// Nodo di rete di partenza con referenza ai nodi direttamente collegati
 
 	// Di default è in errore
@@ -177,16 +196,31 @@ int router_start(t_router *router){
 		return bError;
 	}
 	
+	////////////////////
+	// TODO: Cancellare questo blocco
+	int i;
+	char sApp[255];
+	char sApp1[255];
+	for(i = 0;i<table->table_size;i++){
+		netlib_ntoa(table->table_rows[i].ip,sApp);
+		netlib_ntoa(table->table_rows[i].next_hop,sApp1);
+		printf("IPTABLE|%s|%s|%d|\n",sApp,sApp1,table->table_rows[i].peso);
+	}
+	////////////////////
+
 	/**
 	 *
 	 * Cosa fa			:			Esegue un parse della tabella di routing trasformandola in un insieme di nodi e collegamenti con annessi pesi, senza però cicli
 	 * table			:			routing_table, puntatore alla definizione della tabella di routing
 	 * starting_node_ip		:			int, indirizzo ip del primo nodo (nodo radice)
-	 * node				:			t_node, puntatore al nodo di rete (che contiene dei sottonodi)
-	 * Ritorna			:			bRet -> intero, 0 = Tutto ok | 1 = Errore
+	 * node				:			t_node, puntatore al nodo di rete radice(che contiene dei sottonodi)
+	 * peso_destinazione		:			intero, peso per raggiungere il nodo, di default il primo dovrebbe essere 0 dato che si tratta del nodo corrente
+	 * Ritorna			:			bRet -> intero, 0 = Errore | 1 = Tutto ok
+	 *
+	 * N.B.				:			Passare una copia della tabella (table) perchè man mano che viene scansionata se vengono trovate delle corrispondenze i valori(ip,next_hop,peso) delle righe vengono impostate a -1
 	 *
 	 */
-	bError = routingtable_parse_table(table,router->ip,&node);
+	bError = !(routingtable_parse_table(table,router->ip,&node,0));
 	if(bError){
 		/**
 		 *
@@ -208,6 +242,10 @@ int router_start(t_router *router){
 		return bError;
 	}
 
+	// TODO: Togliere questa chiamata a funzione e funzione
+	// router_print_node(*node,1);
+	netlib_ntoa(node->next_nodes[0].next_nodes[0].ip,sApp);
+	printf("SOTTONODO|%s|\n",sApp);
 	/**
 	 *
 	 * Cosa fa			:			Mette il router in modalità listen in attesa di una connessione da parte di un host
@@ -233,7 +271,7 @@ int router_start(t_router *router){
 	 */
 	release_node_memory(node);
 		
-	return (!bError);	// Se sono arrivato qui senza problemi ritorno 0, ovvero Tutto ok!
+	return bError;	// Se sono arrivato qui senza problemi ritorno 0, ovvero Tutto ok!
 }
 
 /**

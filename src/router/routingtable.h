@@ -68,10 +68,13 @@ void release_table_memory(routing_table *table);
  * Cosa fa			:			Esegue un parse della tabella di routing trasformandola in un insieme di nodi e collegamenti con annessi pesi, senza però cicli
  * table			:			routing_table, puntatore alla definizione della tabella di routing
  * starting_node_ip		:			int, indirizzo ip del primo nodo (nodo radice)
- * node				:			t_node, puntatore al nodo di rete (che contiene dei sottonodi)
- * Ritorna			:			bRet -> intero, 0 = Tutto ok | 1 = Errore
+ * node				:			t_node, puntatore al nodo di rete radice(che contiene dei sottonodi)
+ * peso_destinazione		:			intero, peso per raggiungere il nodo, di default il primo dovrebbe essere 0 dato che si tratta del nodo corrente
+ * Ritorna			:			bRet -> intero, 0 = Errore | 1 = Tutto ok
+ *
+ * N.B.				:			Passare una copia della tabella (table) perchè man mano che viene scansionata se vengono trovate delle corrispondenze i valori(ip,next_hop,peso) delle righe vengono impostate a -1
  *
  */
-int routingtable_parse_table(routing_table *table,int router_ip,t_node **node);
+int routingtable_parse_table(routing_table *table,int starting_node_ip,t_node **node, int peso_destinazione);
 /*=====  End of PROTOTIPI  ======*/
 #endif

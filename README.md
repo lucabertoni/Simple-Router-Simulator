@@ -13,7 +13,7 @@ When a connection is established, the router breaks up the ICMP packet and gets 
 **GCC version**: gcc version 4.9.2 (Debian 4.9.2-10)
 
 ## Example of network
-The network used actually in test is the following.
+The network used actually in test is the following (based on the scan of the router A with ip: 192.168.0.1)
 ```
 Destination  | Next Hop  |Weight
 --------------------------------
@@ -27,7 +27,7 @@ Destination  | Next Hop  |Weight
 192.168.0.2  |X          |   1
 192.168.0.6  |X          |   3
 
-X = Direct connection, there aren't any router between the destination and the current position.
+X = Direct connection, there aren't any router between the destination and the current position (in the table it will be changed with the current router ip address, in our case: 192.168.0.1)
 
 ```
 
